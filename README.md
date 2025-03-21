@@ -74,18 +74,23 @@ brew install maven
 
 ---
 
-## ✅ Passo 5: Compilando o Projeto
-Dentro da pasta do projeto, execute:
+## ✅ Passo 5: Informações sobre o Projeto JasperReports Library
+
+O projeto JasperReports Library consiste em um artefato core JAR e vários artefatos opcionais de extensão JAR.
+
+O sistema de build depende exclusivamente do **Maven**.
+
+Para compilar o core e as extensões, execute na raiz do projeto:
 ```bash
 mvn clean install source:jar javadoc:jar
 ```
 
-Se houver alterações locais:
+Se o projeto tiver modificações locais não commitadas no Git:
 ```bash
 mvn clean install -Dmaven.buildNumber.doCheck=false
 ```
 
-Para checar compatibilidade com JDK 1.8:
+Para garantir a compatibilidade com o JDK 1.8:
 ```bash
 mvn clean install -Denforcer.skip=false -pl '!ext/ejbql, !ext/hibernate, !ext/servlets'
 ```
@@ -112,5 +117,66 @@ docs/target/docs
 
 ---
 
+## ✅ Passo 8: Executar os Exemplos (Samples)
+
+O projeto possui diversos exemplos (samples) para demonstrar funcionalidades.
+
+### Iniciar o banco de dados HSQLDB (requerido por alguns samples):
+```bash
+cd demo/hsqldb
+mvn exec:java
+```
+
+### Executar um sample individual:
+```bash
+cd demo/samples/<nome_do_sample>
+mvn clean compile exec:java
+```
+
+### Executar um método específico do sample (exemplo gerar PDF):
+```bash
+mvn exec:java -Dexec.args=pdf
+```
+
+### Executar vários métodos na sequência:
+```bash
+mvn exec:java -Dexec.args="pdf xls"
+```
+
+### Visualizar o design do relatório JRXML:
+```bash
+mvn exec:java@viewDesign
+```
+
+### Visualizar o arquivo compilado .jasper:
+```bash
+mvn exec:java@viewDesign -Dexec.args=target/reports/I18nReport.jasper
+```
+
+### Visualizar o arquivo .jrprint gerado:
+```bash
+mvn exec:java@view
+# Ou especificando o arquivo:
+mvn exec:java@view -Dexec.args=target/reports/I18nReport.jrprint
+```
+
+### Também funciona para arquivos XML exportados:
+```bash
+mvn exec:java@view -Dexec.args=target/reports/I18nReport.jrpxml
+```
+
+### Executar um sample completo incluindo todos os serviços necessários:
+```bash
+mvn clean compile exec:exec@all
+```
+
+### Executar todos os samples de uma vez (na pasta /demo/samples):
+```bash
+cd demo/samples
+mvn clean compile exec:exec@all
+```
+
+---
+
 ## 🎯 Fim!
-Pronto! Agora você está preparado para compilar o JasperReports Library.
+Pronto! Agora você tem o ambiente configurado para compilar, testar, gerar documentação e executar os exemplos do JasperReports Library.
